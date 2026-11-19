@@ -1,0 +1,186 @@
+<title>Семейный щит – прототип</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&family=PT+Sans+Caption:wght@700&display=swap">
+<style>
+/* Layout: phone frame centred beside a short explanation; on phones the frame becomes the page */
+:root{
+  --bg:#EEF0F6; --panel:#FFFFFF; --ink:#1B1830; --muted:#5C5975; --line:#D9D7E6;
+  --accent:#5B0FA8; --accent-ink:#FFFFFF; --soft:#F1E9FB;
+  --red:#C62828; --red-bg:#FDE4E3; --yellow:#9A6A00; --yellow-bg:#FFF2CC; --green:#1F7A3A; --green-bg:#E1F4E6;
+  --f-body:"PT Sans", "Segoe UI", Arial, sans-serif; --f-head:"PT Sans Caption", "PT Sans", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#14121E; --panel:#1F1C2C; --ink:#F0EEF8; --muted:#A9A5C0; --line:#35314A;
+  --accent:#B98AF0; --accent-ink:#1A0B2E; --soft:#2C2342;
+  --red:#FF8A80; --red-bg:#3D1F22; --yellow:#FFD166; --yellow-bg:#3A3018; --green:#7EE2A0; --green-bg:#1C3326; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#14121E; --panel:#1F1C2C; --ink:#F0EEF8; --muted:#A9A5C0; --line:#35314A;
+  --accent:#B98AF0; --accent-ink:#1A0B2E; --soft:#2C2342;
+  --red:#FF8A80; --red-bg:#3D1F22; --yellow:#FFD166; --yellow-bg:#3A3018; --green:#7EE2A0; --green-bg:#1C3326; color-scheme:dark }
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px}
+.wrap{max-width:1040px;margin:0 auto;padding-block:28px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;gap:40px;align-items:flex-start;justify-content:center;flex-wrap:wrap}
+.about{flex:1 1 300px;max-width:420px;min-width:0;display:flex;flex-direction:column;gap:14px}
+.about h1{font-family:var(--f-head);font-size:28px;margin:0;text-wrap:balance}
+.about p{margin:0;line-height:1.5;color:var(--muted)}
+.tag{display:inline-block;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.nav{display:flex;flex-wrap:wrap;gap:8px}
+.nav button{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:20px;padding:6px 12px;cursor:pointer}
+.nav button[aria-current="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.phone{flex:0 0 auto;width:min(380px,100%);height:760px;max-height:calc(100vh - 40px);min-height:620px;background:var(--panel);border:10px solid #2A2738;border-radius:38px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 18px 40px rgba(20,10,40,.18)}
+.bar{display:flex;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line)}
+.bar .back{font:inherit;font-size:22px;border:0;background:none;color:var(--accent);cursor:pointer;padding:0 6px 0 0}
+.bar .ttl{font-family:var(--f-head);font-size:20px;font-weight:700}
+.bar .who{margin-left:auto;font-size:13px;color:var(--muted)}
+.screen{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:14px}
+.big{font:inherit;font-size:21px;font-weight:700;text-align:left;border:0;border-radius:18px;padding:18px;cursor:pointer;display:flex;flex-direction:column;gap:4px;background:var(--soft);color:var(--ink)}
+.big small{font-size:15px;font-weight:400;color:var(--muted)}
+.big.main{background:var(--accent);color:var(--accent-ink)}
+.big.main small{color:var(--accent-ink);opacity:.85}
+.big.alarm{background:var(--red);color:#fff}
+.big.alarm small{color:#fff;opacity:.9}
+.big:focus-visible,.nav button:focus-visible,.chip:focus-visible,.opt:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+textarea{font:inherit;font-size:18px;width:100%;box-sizing:border-box;min-height:120px;border:2px solid var(--line);border-radius:14px;padding:12px;background:var(--panel);color:var(--ink);resize:vertical}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:14px;padding:6px 10px;cursor:pointer}
+.light{border-radius:18px;padding:16px;display:flex;gap:14px;align-items:center}
+.light .dot{width:56px;height:56px;border-radius:50%;flex:0 0 auto}
+.light b{font-size:22px;display:block}
+.light span{font-size:16px}
+.L-red{background:var(--red-bg)} .L-red .dot{background:var(--red)} .L-red b{color:var(--red)}
+.L-yel{background:var(--yellow-bg)} .L-yel .dot{background:#F2B705} .L-yel b{color:var(--yellow)}
+.L-grn{background:var(--green-bg)} .L-grn .dot{background:#2E9E4F} .L-grn b{color:var(--green)}
+ul.sig{margin:0;padding-left:20px;line-height:1.5}
+.note{font-size:13px;color:var(--muted);line-height:1.4}
+.card{border:1px solid var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.card .t{font-size:13px;color:var(--muted)}
+.opt{font:inherit;font-size:18px;text-align:left;border:2px solid var(--line);background:var(--panel);color:var(--ink);border-radius:14px;padding:14px;cursor:pointer}
+.opt.ok{border-color:var(--green);background:var(--green-bg)} .opt.bad{border-color:var(--red);background:var(--red-bg)}
+.q{font-size:19px;line-height:1.45;background:var(--soft);border-radius:14px;padding:14px}
+.score{font-family:var(--f-head);font-size:44px;font-variant-numeric:tabular-nums}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.sw{width:46px;height:26px;border-radius:13px;background:var(--accent);position:relative;flex:0 0 auto}
+.sw::after{content:"";position:absolute;right:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff}
+@media (max-width:520px){ .phone{border:0;border-radius:0;box-shadow:none;height:auto;max-height:none;min-height:0} .screen{overflow:visible} }
+@media (prefers-reduced-motion:no-preference){ .light{animation:pop .25s ease-out} @keyframes pop{from{transform:scale(.97)}to{transform:none}} }
+</style>
+
+<div class="wrap">
+  <section class="about">
+    <span class="tag">Концептуальный прототип интерфейса</span>
+    <h1>«Семейный щит»: приложение для пожилого человека и его семьи</h1>
+    <p>Кликабельный макет без серверной части. Проверка сообщения работает по-настоящему: на 12 экспертных правилах с весами из прототипа в Excel. Данные в журнале семьи – примеры.</p>
+    <div class="nav" id="nav"></div>
+    <p class="note">Правила – первый уровень модуля оценки риска. В проекте к ним добавляется модель машинного обучения, обученная на размеченных примерах.</p>
+  </section>
+  <div class="phone" role="region" aria-label="Экран приложения">
+    <div class="bar"><button class="back" id="back" aria-label="Назад" hidden>‹</button><span class="ttl" id="ttl"></span><span class="who" id="who"></span></div>
+    <div class="screen" id="scr"></div>
+  </div>
+</div>
+
+<script>
+const RULES = [{"c": "R1", "n": "Срочность и давление", "w": 15, "k": ["срочно", "немедленно", "в течение часа", "прямо сейчас", "сегодня", "иначе"]}, {"c": "R2", "n": "Запрос кода, пароля, данных карты", "w": 45, "k": ["код из смс", "код из sms", "продиктуйте", "назовите код", "сообщите код", "назовите пароль", "cvv", "номер карты", "данные карты", "срок действия"]}, {"c": "R3", "n": "Звонящий представляется банком или госорганом", "w": 25, "k": ["служба безопасности", "сотрудник банка", "центробанк", "центрального банка", "банк россии", "фсб", "следователь", "полиция", "росфинмониторинг", "пенсионный фонд"]}, {"c": "R4", "n": "Перевод на «безопасный» или чужой счёт", "w": 45, "k": ["безопасный счёт", "безопасный счет", "резервный счёт", "резервный счет", "переведите", "переведи", "скинь деньги", "передать деньги"]}, {"c": "R5", "n": "Ссылка или короткая ссылка", "w": 25, "k": ["http", "bit.ly", "clck.ru", "по ссылке", ".top", ".xyz"]}, {"c": "R6", "n": "Установка приложения, удалённый доступ", "w": 45, "k": ["rustdesk", "anydesk", "установите приложение", "скачайте приложение", "демонстрацию экрана", "скачайте приложение защиты"]}, {"c": "R7", "n": "«Родственник в беде»", "w": 40, "k": ["мама, это я", "мам, это я", "бабуль, это я", "это внучка", "попал в дтп", "после дтп", "мой новый номер", "пишу с чужого", "сломался телефон", "у меня проблемы", "нужны деньги"]}, {"c": "R8", "n": "Выигрыш, компенсация, выплата", "w": 25, "k": ["выигрыш", "выиграли", "компенсаци", "положена выплата", "надбавка к пенсии", "возврат вкладов", "приз"]}, {"c": "R9", "n": "Блокировка карты, кредит, подозрительная операция", "w": 20, "k": ["заблокирован", "подозрительная операция", "оформлен кредит", "заявка на кредит", "списание", "аннулируется", "отключат", "взломан"]}, {"c": "R10", "n": "Оплата комиссии, пошлины, доставки", "w": 20, "k": ["оплатите комиссию", "оплатите доставку", "оплатите пошлину", "оплатите по ссылке", "комиссию"]}, {"c": "R11", "n": "Требование тайны и запрет советоваться", "w": 25, "k": ["никому не говорите о", "папе не говори", "не задавайте вопросов", "не кладите трубку", "потом объясню"]}, {"c": "R12", "n": "Типичная фраза настоящего банка (понижающий признак)", "w": -30, "k": ["никому не сообщайте", "не сообщайте код", "по номеру на обороте карты"]}];
+const EX = [
+ "Здравствуйте, это служба безопасности банка. Срочно продиктуйте код из СМС для отмены операции.",
+ "Мама, это я, это мой новый номер. Попал в ДТП, срочно нужны деньги, папе не говори.",
+ "Вам положена компенсация 48 000 руб. Подробности по ссылке bit.ly/komp48",
+ "Напоминаем: запись к терапевту 21.11 в 10:30, кабинет 214."
+];
+const LOG = [
+ {t:"Сегодня, 10:42", k:"red", s:"Мама переслала сообщение «служба безопасности банка… продиктуйте код». Индекс риска 85."},
+ {t:"Сегодня, 10:43", k:"red", s:"Нажата кнопка «Мне сейчас звонят». Вам отправлено уведомление."},
+ {t:"Вчера, 18:05", k:"grn", s:"Проверено сообщение из поликлиники. Опасных признаков нет."},
+ {t:"17 ноября", k:"yel", s:"Ссылка на «выплату от государства». Мама не стала переходить."},
+ {t:"16 ноября", k:"grn", s:"Пройдена тренировка «Звонок из банка»: 3 из 3."}
+];
+const QUIZ = [
+ {q:"Звонит «сотрудник банка»: по вашей карте подозрительная операция, нужно назвать код из СМС. Что делать?",
+  o:["Назвать код, чтобы отменить операцию","Положить трубку и позвонить в банк по номеру на обороте карты","Попросить перезвонить позже"], a:1,
+  e:"Настоящий банк никогда не спрашивает код из СМС. Номер на обороте карты – надёжный способ проверить."},
+ {q:"Пишет «внук» с нового номера: попал в беду, срочно нужны деньги, родителям не говорить. Что делать?",
+  o:["Сразу перевести деньги","Позвонить внуку или его родителям по старому номеру","Ответить и спросить, сколько нужно"], a:1,
+  e:"Просьба держать всё в тайне и новый номер – признаки схемы «родственник в беде». Проверьте по известному номеру."},
+ {q:"Приходит СМС: «Вам положена выплата, получите по ссылке». Что делать?",
+  o:["Перейти по ссылке и ввести данные карты","Не переходить; узнать о выплатах на Госуслугах или в соцзащите","Переслать ссылку подругам"], a:1,
+  e:"Выплаты не приходят по ссылкам из СМС. Проверяйте сведения только на официальных сайтах."}
+];
+let st = {view:"start", text:EX[0], res:null, qi:0, pick:null, right:0};
+const VIEWS = [["start","Вход"],["home","Главная"],["check","Проверка"],["call","Мне звонят"],["train","Тренажёр"],["family","Семья"]];
+
+function score(t){
+  const s = t.toLowerCase().replace(/ё/g,"е"); let sum = 0; const hit = [];
+  for(const r of RULES){ if(r.k.some(k => s.includes(k.toLowerCase().replace(/ё/g,"е")))){ sum += r.w; hit.push(r); } }
+  sum = Math.max(0, Math.min(100, sum));
+  const lvl = sum >= 70 ? "red" : sum >= 40 ? "yel" : "grn";
+  return {sum, hit, lvl};
+}
+function esc(x){return x.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function go(v){ st.view = v; if(v==="train"){st.qi=0;st.pick=null;st.right=0;} render(); }
+window.go = go;
+
+const LV = {
+ red:{c:"L-red",h:"Опасно",s:"Похоже на мошенничество. Ничего не сообщайте и не переводите. Позвоните семье."},
+ yel:{c:"L-yel",h:"Осторожно",s:"Есть подозрительные признаки. Не спешите, посоветуйтесь с близкими."},
+ grn:{c:"L-grn",h:"Опасных признаков нет",s:"Сообщение выглядит обычным. Если сомневаетесь – спросите семью."}
+};
+
+function render(){
+  const v = st.view, S = document.getElementById("scr");
+  document.getElementById("back").hidden = (v==="start"||v==="home"||v==="family");
+  document.getElementById("who").textContent = v==="family" ? "режим семьи" : (v==="start" ? "" : "Нина Петровна");
+  const T = {start:"Семейный щит",home:"Семейный щит",check:"Проверка",call:"Мне сейчас звонят",train:"Тренажёр",family:"Семья: журнал"};
+  document.getElementById("ttl").textContent = T[v];
+  let h = "";
+  if(v==="start"){
+    h = `<p class="q">Приложение помогает распознать мошенников и вовремя позвать на помощь близких.</p>
+    <button class="big main" onclick="go('home')">Я пользуюсь сам<small>Крупные кнопки, проверка сообщений, тревожная кнопка</small></button>
+    <button class="big" onclick="go('family')">Я родственник<small>Уведомления о рисках и журнал событий</small></button>
+    <p class="note">Анализ выполняется на телефоне. Семья получает только уведомление о риске, без текста ваших переписок, если вы не разрешили иное.</p>`;
+  } else if(v==="home"){
+    h = `<button class="big main" onclick="go('check')">Проверить сообщение<small>Вставьте текст СМС или письма</small></button>
+    <button class="big alarm" onclick="go('call')">Мне сейчас звонят<small>Подсказка и сигнал семье одной кнопкой</small></button>
+    <button class="big" onclick="go('train')">Тренажёр<small>3 коротких упражнения</small></button>
+    <button class="big" onclick="go('family')">Моя семья<small>Кто получает уведомления</small></button>`;
+  } else if(v==="check"){
+    h = `<label for="msg" class="note">Текст сообщения</label>
+    <textarea id="msg">${esc(st.text)}</textarea>
+    <div class="chips">${EX.map((e,i)=>`<button class="chip" data-ex="${i}">Пример ${i+1}</button>`).join("")}</div>
+    <button class="big main" id="run">Проверить</button>`;
+    if(st.res){ const r = st.res, L = LV[r.lvl];
+      h += `<div class="light ${L.c}" role="status"><div class="dot"></div><div><b>${L.h}</b><span>${L.s}</span></div></div>
+      <div class="row"><span class="note">Индекс риска (0–100)</span><span class="score">${r.sum}</span></div>
+      ${r.hit.length?`<div class="card"><span class="t">Что насторожило</span><ul class="sig">${r.hit.map(x=>`<li>${x.n}${x.w<0?" (снижает риск)":""}</li>`).join("")}</ul></div>`:""}
+      ${r.lvl!=="grn"?`<button class="big alarm" onclick="go('call')">Позвать семью</button>`:""}`; }
+  } else if(v==="call"){
+    h = `<div class="light L-red"><div class="dot"></div><div><b>Семья уведомлена</b><span>Дочь Ольга получила сигнал и перезвонит вам.</span></div></div>
+    <div class="q"><b>Пока ждёте:</b><br>1. Положите трубку – это не грубо.<br>2. Никому не называйте коды из СМС.<br>3. Не переводите деньги и не устанавливайте программы.<br>4. Банку звоните сами по номеру на обороте карты.</div>
+    <button class="big" onclick="go('home')">Я положил(а) трубку</button>`;
+  } else if(v==="train"){
+    if(st.qi < QUIZ.length){ const q = QUIZ[st.qi];
+      h = `<span class="note">Упражнение ${st.qi+1} из ${QUIZ.length}</span><div class="q">${q.q}</div>
+      ${q.o.map((o,i)=>`<button class="opt ${st.pick===null?"":(i===q.a?"ok":(i===st.pick?"bad":""))}" data-o="${i}" ${st.pick!==null?"disabled":""}>${o}</button>`).join("")}
+      ${st.pick!==null?`<div class="card"><b>${st.pick===q.a?"Верно!":"Не совсем."}</b><span>${q.e}</span></div><button class="big main" id="next">Дальше</button>`:""}`;
+    } else {
+      h = `<div class="light L-grn"><div class="dot"></div><div><b>Готово: ${st.right} из ${QUIZ.length}</b><span>Семья увидит, что вы прошли тренировку.</span></div></div>
+      <button class="big" onclick="go('home')">На главную</button>`;
+    }
+  } else if(v==="family"){
+    h = `<div class="card"><span class="t">Подопечный</span><b>Нина Петровна, 71 год (пример)</b><span class="note">За неделю: 2 опасных события, 1 подозрительное</span></div>
+    ${LOG.map(e=>`<div class="light L-${e.k}" style="padding:12px"><div class="dot" style="width:18px;height:18px"></div><div><span class="note">${e.t}</span><br><span>${e.s}</span></div></div>`).join("")}
+    <div class="card"><div class="row"><span>Сразу сообщать об опасных событиях</span><span class="sw" aria-label="включено"></span></div>
+    <div class="row"><span>Еженедельная сводка</span><span class="sw" aria-label="включено"></span></div></div>
+    <button class="big" onclick="go('start')">Сменить роль</button>`;
+  }
+  S.innerHTML = h; S.scrollTop = 0;
+  const run = document.getElementById("run");
+  if(run) run.onclick = () => { st.text = document.getElementById("msg").value; st.res = score(st.text); render(); };
+  S.querySelectorAll("[data-ex]").forEach(b => b.onclick = () => { st.text = EX[+b.dataset.ex]; st.res = score(st.text); render(); });
+  S.querySelectorAll("[data-o]").forEach(b => b.onclick = () => { st.pick = +b.dataset.o; if(st.pick===QUIZ[st.qi].a) st.right++; render(); });
+  const nx = document.getElementById("next"); if(nx) nx.onclick = () => { st.qi++; st.pick=null; render(); };
+  document.getElementById("nav").innerHTML = VIEWS.map(([k,n])=>`<button data-v="${k}" aria-current="${k===v}">${n}</button>`).join("");
+  document.querySelectorAll("#nav [data-v]").forEach(b => b.onclick = () => go(b.dataset.v));
+}
+document.getElementById("back").onclick = () => go("home");
+st.res = score(st.text);
+render();
+</script>
